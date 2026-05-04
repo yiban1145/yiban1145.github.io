@@ -4,9 +4,9 @@
 
 > 一个极简、纯净、无追踪的浏览器导航页，搜索框支持命令行彩蛋。
 
-[![GitHub Pages](https://img.shields.io/badge/在线体验-GitHub%20Pages-blue)](https://你的用户名.github.io/nav)
+[![GitHub Pages](https://img.shields.io/badge/在线体验-GitHub%20Pages-blue)](https://yiban1145.github.io/nav)
 [![License](https://img.shields.io/badge/License-MIT-green)](./LICENSE)
-[![PR Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)](https://github.com/你的用户名/nav/pulls)
+[![PR Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)](https://github.com/yiban1145/nav/pulls)
 
 ## ✨ 特性
 
