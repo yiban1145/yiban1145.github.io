@@ -801,12 +801,12 @@
                     document.body.innerHTML = `
                         <div style="display:flex;align-items:center;justify-content:center;height:100vh;flex-direction:column;gap:16px;font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;text-align:center;padding:20px;color:#5a5a7a;">
                             <div style="font-size:48px;">💻</div>
-                            <div style="font-size:18px;font-weight:600;color:#1a1a2e;">请使用电脑访问</div>
-                            <div style="font-size:14px;color:#999;">本页面仅支持桌面端浏览器</div>
-                            <div style="font-size:12px;color:#bbb;margin-top:8px;">目前检测到移动设备</div>
+                            <div style="font-size:18px;font-weight:600;color:#1a1a2e;">请使用电脑UA访问</div>
+                            <div style="font-size:14px;color:#999;">本页面仅支持桌面端UA</div>
+                            <div style="font-size:12px;color:#bbb;margin-top:8px;">目前检测到移动UA</div>
                         </div>
                     `;
-                    throw new Error('移动端访问被拦截');
+                    throw new Error('移动端UA访问被拦截');
                 }
             })();
             // ========== 拦截结束 ========== ← 到这里结束
