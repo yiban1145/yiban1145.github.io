@@ -2,7 +2,7 @@
 ```markdown
 # 🔮 纯净导航
 
-> 一个极简、纯净、无追踪的浏览器导航页，搜索框支持命令行彩蛋。
+> 一个极简、纯净、无追踪的浏览器导航页，搜索框支持命令行彩蛋。注意！只能用电脑UA访问
 
 [![GitHub Pages](https://img.shields.io/badge/在线体验-GitHub%20Pages-blue)](https://yiban1145.github.io/nav)
 [![License](https://img.shields.io/badge/License-MIT-green)](./LICENSE)
