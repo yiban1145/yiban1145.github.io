@@ -260,6 +260,104 @@
   </style>
 </head>
 <body>
+
+  <!-- ========== 人机验证界面 ========== -->
+  <div id="verifyOverlay" style="position:fixed;top:0;left:0;width:100%;height:100%;background:linear-gradient(145deg, #1a2a3a 0%, #0f1a24 100%);z-index:99999;display:flex;justify-content:center;align-items:center;font-family:'Segoe UI','Poppins','Roboto',system-ui,-apple-system,sans-serif;padding:20px;">
+      <div style="max-width:600px;width:100%;background:rgba(255,255,255,0.96);border-radius:48px;box-shadow:0 25px 45px rgba(0,0,0,0.3);overflow:hidden;">
+          <div style="background:#101f2c;padding:24px 28px 20px;text-align:center;color:white;border-bottom:3px solid #ffbf69;">
+              <div style="font-size:48px;background:#2c3e4e;width:70px;height:70px;display:inline-flex;align-items:center;justify-content:center;border-radius:100px;margin-bottom:14px;">🧠</div>
+              <h2 style="font-weight:700;font-size:1.8rem;margin-bottom:8px;">⚡ 真人验证 · 问答挑战</h2>
+              <p style="font-size:0.9rem;opacity:0.85;">防止机器人 · 正确回答后即可进入官网</p>
+          </div>
+          <div style="padding:34px 30px 30px;">
+              <div id="vQuestion" style="background:#f0f4f9;padding:20px 22px;border-radius:36px;margin-bottom:32px;text-align:center;font-size:1.55rem;font-weight:600;color:#0a2b3b;line-height:1.4;"></div>
+              <div style="margin-bottom:28px;">
+                  <label style="display:block;font-weight:600;margin-bottom:8px;margin-left:8px;color:#1f3e4b;">✍️ 你的答案</label>
+                  <input type="text" id="vAnswer" placeholder="输入答案" autocomplete="off" style="width:100%;padding:16px 22px;font-size:1.1rem;border:2px solid #e2e8f0;border-radius:60px;outline:none;font-family:inherit;">
+              </div>
+              <div id="vStatus" style="background:#fff8e7;border-left:6px solid #f6b83d;padding:14px 18px;border-radius:28px;margin:20px 0 24px;font-weight:500;color:#a16207;">⚠️ 请回答当前问题，证明你不是机器人。不要觉得嘛麻麻，我们也是为了防人机</div>
+              <div style="display:flex;gap:15px;flex-wrap:wrap;">
+                  <button id="vVerifyBtn" style="flex:2;border:none;font-weight:600;padding:14px 26px;border-radius:40px;font-size:1rem;cursor:pointer;background:#ff9f3d;color:#2c1a0a;box-shadow:0 5px 0 #b45f1a;transform:translateY(-2px);">✓ 验证答案</button>
+                  <button id="vResetBtn" style="flex:1;border:none;font-weight:600;padding:14px 26px;border-radius:40px;font-size:1rem;cursor:pointer;background:#eef2f5;color:#2c5368;border:1px solid #cddfe7;">🔄 换题</button>
+              </div>
+          </div>
+          <div style="font-size:0.7rem;text-align:center;background:#f8fafc;padding:12px;color:#7f8c8d;border-top:1px solid #e9edf2;">🛡️ 防自动化测试 | 答对即可进入导航</div>
+      </div>
+  </div>
+
+  <!-- 验证脚本 -->
+  <script>
+  (function(){
+      const overlay = document.getElementById('verifyOverlay');
+      const qEl = document.getElementById('vQuestion');
+      const aEl = document.getElementById('vAnswer');
+      const sEl = document.getElementById('vStatus');
+      const vBtn = document.getElementById('vVerifyBtn');
+      const rBtn = document.getElementById('vResetBtn');
+      
+      const bank = [
+          {q:"中国首都在哪个城市？",a:"北京"},
+          {q:"中华人民共和国成立于哪一年？",a:"1949"},
+          {q:"太阳从哪边升起？",a:"东"},
+          {q:"自由女神像在哪个美国城市？",a:"纽约"},
+          {q:"15 + 27 等于多少？",a:"42"},
+          {q:"100 除以 4 等于多少？",a:"25"},
+          {q:"水的化学式是什么？",a:"H2O"},
+          {q:"地球的卫星叫什么？",a:"月球"},
+          {q:"世界最高的山峰是？",a:"珠穆朗玛峰"},
+          {q:"一天有多少小时？",a:"24"}
+      ];
+      
+      let cur = null;
+      let passed = false;
+      
+      function pick(){ return bank[Math.floor(Math.random()*bank.length)]; }
+      
+      function check(u, a){
+          u = u.trim().toLowerCase().replace(/[，,。？?！!；;：:·\s]+/g,'');
+          a = a.toLowerCase().replace(/[，,。？?！!；;：:·\s]+/g,'');
+          if(u===a) return true;
+          if(!isNaN(u) && !isNaN(a) && Number(u)===Number(a)) return true;
+          const syn = {北京:["北平"],东:["东方","东边"],纽约:["newyork"],月球:["月亮"],42:["四十二"],25:["二十五"],24:["二十四"],珠穆朗玛峰:["珠峰","everest"],H2O:["h2o","水"]};
+          const vars = syn[a] || [];
+          return vars.some(v=>v.toLowerCase().replace(/[，,。？?！!；;：:·\s]+/g,'')===u);
+      }
+      
+      function load(){
+          cur = pick();
+          qEl.textContent = cur.q;
+          aEl.value = '';
+          passed = false;
+          sEl.style.background='#fff8e7'; sEl.style.borderLeftColor='#f6b83d'; sEl.style.color='#a16207';
+          sEl.textContent = '🔄 新题目，请输入答案';
+          aEl.style.borderColor='#e2e8f0';
+      }
+      
+      function verify(){
+          if(passed){ sEl.textContent='✅ 已通过！正在进入导航…'; setTimeout(()=>overlay.style.display='none',400); return; }
+          const u = aEl.value;
+          if(!u.trim()){ sEl.style.background='#fff0f0'; sEl.style.borderLeftColor='#d32f2f'; sEl.style.color='#b91c1c'; sEl.textContent='❌ 请输入答案'; return; }
+          if(check(u,cur.a)){
+              passed = true;
+              sEl.style.background='#ecfdf3'; sEl.style.borderLeftColor='#2b7e3a'; sEl.style.color='#166534';
+              sEl.textContent = '✅ 验证通过！正在进入导航…';
+              aEl.style.borderColor='#2b7e3a';
+              setTimeout(()=>overlay.style.display='none',600);
+          } else {
+              sEl.style.background='#fff0f0'; sEl.style.borderLeftColor='#d32f2f'; sEl.style.color='#b91c1c';
+              sEl.textContent = '❌ 答案不正确，请重试或换题';
+              aEl.style.borderColor='#d32f2f';
+              aEl.focus();
+          }
+      }
+      
+      vBtn.addEventListener('click', verify);
+      rBtn.addEventListener('click', load);
+      aEl.addEventListener('keydown', function(e){ if(e.key==='Enter') verify(); });
+      
+      load();
+  })();
+  </script>
   <div class="container">
     <div class="title-section">
       <h1 class="brand-name">陈鸿涛的作品</h1>
